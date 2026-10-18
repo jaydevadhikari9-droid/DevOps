@@ -1,0 +1,60 @@
+Exercise 3 - Flash Sale ReplicaSet Verification
+
+--- Nodes ---
+NAME       STATUS   ROLES           AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION                             CONTAINER-RUNTIME
+minikube   Ready    control-plane   4h24m   v1.37.0   192.168.49.2   <none>        Debian GNU/Linux 12 (bookworm)   6.6.87.2-microsoft-standard-WSL2 (amd64)   containerd://2.3.4
+
+--- ReplicaSet ---
+NAME           DESIRED   CURRENT   READY   AGE
+flashsale-rs   5         5         5       30m
+
+--- Pods and node placement ---
+NAME                 READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+flashsale-rs-5xpbn   1/1     Running   0          15m   10.244.0.11   minikube   <none>           <none>
+flashsale-rs-nlwqk   1/1     Running   0          26m   10.244.0.10   minikube   <none>           <none>
+flashsale-rs-sxzc9   1/1     Running   0          30m   10.244.0.6    minikube   <none>           <none>
+flashsale-rs-tvlnw   1/1     Running   0          29m   10.244.0.9    minikube   <none>           <none>
+flashsale-rs-wm2br   1/1     Running   0          30m   10.244.0.7    minikube   <none>           <none>
+
+--- Service ---
+NAME            TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+flashsale-svc   NodePort   10.111.40.35   <none>        80:31889/TCP   30m
+
+--- ReplicaSet description ---
+Name:         flashsale-rs
+Namespace:    default
+Selector:     app=flashsale
+Labels:       app=flashsale
+Annotations:  <none>
+Replicas:     5 current / 5 desired
+Pods Status:  5 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:  app=flashsale
+  Containers:
+   flashsale-container:
+    Image:      flashsale:1.0
+    Port:       5000/TCP
+    Host Port:  0/TCP
+    Limits:
+      cpu:     500m
+      memory:  256Mi
+    Requests:
+      cpu:         100m
+      memory:      128Mi
+    Liveness:      http-get http://:5000/health delay=10s timeout=1s period=10s #success=1 #failure=3
+    Readiness:     http-get http://:5000/health delay=2s timeout=1s period=5s #success=1 #failure=3
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Events:
+  Type    Reason            Age   From                   Message
+  ----    ------            ----  ----                   -------
+  Normal  SuccessfulCreate  31m   replicaset-controller  Created pod: flashsale-rs-8vzsd
+  Normal  SuccessfulCreate  31m   replicaset-controller  Created pod: flashsale-rs-sxzc9
+  Normal  SuccessfulCreate  31m   replicaset-controller  Created pod: flashsale-rs-wm2br
+  Normal  SuccessfulCreate  29m   replicaset-controller  Created pod: flashsale-rs-lb5nb
+  Normal  SuccessfulCreate  29m   replicaset-controller  Created pod: flashsale-rs-tvlnw
+  Normal  SuccessfulCreate  26m   replicaset-controller  Created pod: flashsale-rs-nlwqk
+  Normal  SuccessfulCreate  15m   replicaset-controller  Created pod: flashsale-rs-5xpbn
