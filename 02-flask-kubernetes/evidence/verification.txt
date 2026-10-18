@@ -1,0 +1,46 @@
+﻿Flask on Kubernetes - Verification Results
+Date: 10/19/2026 01:51:18
+
+--- Minikube status ---
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+
+--- Kubernetes nodes ---
+NAME       STATUS   ROLES           AGE     VERSION
+minikube   Ready    control-plane   3h42m   v1.37.0
+
+--- Deployment ---
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+flask-app   1/1     1            1           24m
+
+--- Flask pods ---
+NAME                         READY   STATUS    RESTARTS   AGE
+flask-app-59f7cdccb4-2zpsf   1/1     Running   0          24m
+
+--- Services ---
+NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+flask-app-service   NodePort    10.98.60.225    <none>        15000:31308/TCP   24m
+hello-k8s           NodePort    10.107.164.97   <none>        80:32008/TCP      159m
+kubernetes          ClusterIP   10.96.0.1       <none>        443/TCP           3h42m
+
+--- Flask application logs ---
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:15000
+ * Running on http://10.244.0.4:15000
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [18/Oct/2026 20:04:26] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/Oct/2026 20:06:16] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/Oct/2026 20:06:16] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [18/Oct/2026 20:07:11] "GET /?utm_source=chatgpt.com HTTP/1.1" 200 -
+127.0.0.1 - - [18/Oct/2026 20:09:44] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/Oct/2026 20:10:23] "GET / HTTP/1.1" 200 -
+
+--- HTTP response ---
