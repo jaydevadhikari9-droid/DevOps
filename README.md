@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # DevOps Hands-On Projects
 
 This repository contains my DevOps learning exercises and practical projects.
@@ -27,3 +28,7 @@ Each exercise has its own folder with relevant files, configuration, documentati
 - Terraform
 - CI/CD
 - Monitoring and Logging
+=======
+# DevOps
+My hands-on DevOps learning projects
+>>>>>>> 561b51d87ced7c01c3acaedc1234fc160bd9959a
