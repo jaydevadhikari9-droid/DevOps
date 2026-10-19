@@ -1,0 +1,36 @@
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Jenkins CI/CD Exercise 7'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Build stage successful'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Test stage successful'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploy stage successful'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Exercise 7 pipeline completed successfully!'
+        }
+    }
+}
