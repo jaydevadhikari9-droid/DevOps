@@ -1,0 +1,25 @@
+﻿Exercise 6 - Real-Time Operations Monitoring
+Date: 10/19/2026 17:51:35
+
+HOME:
+{
+    "health":  "/health",
+    "message":  "Delivery Operations Monitoring API",
+    "metrics":  "/metrics"
+}
+
+HEALTH:
+{
+    "status":  "healthy"
+}
+
+SIMULATION:
+{
+    "delivery_time_seconds":  5.77,
+    "in_transit_deliveries":  42,
+    "pending_deliveries":  83,
+    "status":  "metrics updated"
+}
+
+METRICS HTTP STATUS:
+200

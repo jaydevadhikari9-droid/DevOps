@@ -1,0 +1,20 @@
+﻿groups:
+  - name: delivery-alerts
+    rules:
+      - alert: HighPendingDeliveries
+        expr: delivery_pending > 80
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: High number of pending deliveries
+          description: Pending deliveries have exceeded 80 for 30 seconds.
+
+      - alert: SlowDelivery
+        expr: rate(delivery_time_seconds_sum[1m]) / clamp_min(rate(delivery_time_seconds_count[1m]), 1e-9) > 10
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: Delivery processing time is high
+          description: Average delivery processing time has exceeded 10 seconds.

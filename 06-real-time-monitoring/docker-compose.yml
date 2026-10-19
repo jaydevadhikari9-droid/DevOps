@@ -1,0 +1,26 @@
+﻿services:
+  delivery-metrics:
+    build: .
+    image: delivery-metrics:1.0
+    container_name: delivery-metrics
+    ports:
+      - "8000:8000"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: delivery-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+    depends_on:
+      - delivery-metrics
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: delivery-grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
