@@ -1,0 +1,94 @@
+﻿```groovy
+pipeline {
+    agent {
+        docker {
+            image 'python:3.12-slim'
+            args '-u root'
+        }
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Installing Python dependencies...'
+                sh 'python --version'
+                sh 'python -m venv .venv'
+                sh '.venv/bin/pip install --no-cache-dir -r requirements.txt'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running unit tests...'
+                sh '.venv/bin/python -m unittest discover -s . -p "test_*.py" -v'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Preparing the deployment directory...'
+                sh '''
+                    mkdir -p "${WORKSPACE}/python-app-deploy"
+                    cp app.py requirements.txt "${WORKSPACE}/python-app-deploy/"
+                    cp -r .venv "${WORKSPACE}/python-app-deploy/"
+                '''
+            }
+        }
+
+        stage('Run Application') {
+            steps {
+                echo 'Starting the deployed Flask application...'
+                sh '''
+                    cd "${WORKSPACE}/python-app-deploy"
+                    nohup .venv/bin/python -u app.py > app.log 2>&1 &
+                    echo $! > app.pid
+                    sleep 3
+                    if ! kill -0 "$(cat app.pid)" 2>/dev/null; then
+                        cat app.log
+                        exit 1
+                    fi
+                '''
+            }
+        }
+
+        stage('Test Application') {
+            steps {
+                echo 'Checking the deployed application response...'
+                sh '''
+                    python - <<'PY'
+import time
+import urllib.request
+
+url = "http://127.0.0.1:5002/"
+for attempt in range(10):
+    try:
+        with urllib.request.urlopen(url, timeout=3) as response:
+            body = response.read().decode("utf-8")
+            print("HTTP status:", response.status)
+            print("Response:", body)
+            assert response.status == 200
+            assert body == "Hello, Jenkins Multi-Stage Pipeline!"
+            break
+    except Exception:
+        if attempt == 9:
+            raise
+        time.sleep(1)
+PY
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check the console logs.'
+        }
+        always {
+            echo 'Pipeline execution finished.'
+        }
+    }
+}
+```
