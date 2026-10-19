@@ -1,0 +1,66 @@
+﻿[
+    {
+        "Name": "my-bridge-net",
+        "Id": "87fe0841e1c8dc57f38d44c11e4fdd02de6a5e7fb70d9eecfeec614f2946acd6",
+        "Created": "2026-10-19T10:45:49.716610503Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.20.0.0/16",
+                    "Gateway": "172.20.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {
+            "com.docker.network.enable_ipv4": "true",
+            "com.docker.network.enable_ipv6": "false"
+        },
+        "Labels": {},
+        "Containers": {
+            "0f364f8857591c4000b00acf4640d7b1372e28459b04afc4290162c830698801": {
+                "Name": "redis",
+                "EndpointID": "8bd8ecbbd83a068778dca09722f243996d5c0f68766cc61f2dc5a54a955a569a",
+                "MacAddress": "2a:b0:43:05:db:d7",
+                "IPv4Address": "172.20.0.3/16",
+                "IPv6Address": ""
+            },
+            "2bb88811117e37b3d3ce658fcd7d9dd2e5bf535828e5bdf468e4d75473c92645": {
+                "Name": "mysql",
+                "EndpointID": "37d83441171ca9f9c4fba340b9f07242c64f35fae3f740653a44def005f26eeb",
+                "MacAddress": "82:aa:ce:94:a9:ef",
+                "IPv4Address": "172.20.0.2/16",
+                "IPv6Address": ""
+            },
+            "5db8b51998b4486021c49f4f05e764d70872d1cd4f532fa11426e0df9735427a": {
+                "Name": "flask",
+                "EndpointID": "5ee57c223ff621ef607f6f7ccb816e2237441506dbeac7d142df5a0d5a3f01c6",
+                "MacAddress": "a6:16:8c:1b:8c:f2",
+                "IPv4Address": "172.20.0.4/16",
+                "IPv6Address": ""
+            }
+        },
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.20.0.0/16": {
+                        "IPsInUse": 6,
+                        "DynamicIPsAvailable": 65530
+                    }
+                }
+            }
+        }
+    }
+]
