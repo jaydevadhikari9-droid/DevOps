@@ -1,0 +1,13 @@
+﻿Exercise 5 - Docker Security with AppArmor
+
+Flask test:
+Invoke-RestMethod http://localhost:5000/
+Result: Successful; Flask returned the expected response.
+
+Docker security options:
+docker info --format '{{json .SecurityOptions}}'
+Observed: seccomp and cgroupns.
+
+Custom AppArmor profile:
+Status: Not yet verified as active.
+Container inspection returned null for HostConfig.SecurityOpt.
