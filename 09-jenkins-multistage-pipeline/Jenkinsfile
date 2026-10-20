@@ -27,13 +27,13 @@ pipeline {
                 '''
             }
         }
-
-               stage('Test Application') {
+        stage('Test Application') {
             steps {
                 echo 'Checking application response with Flask test client...'
                 bat 'python -m unittest discover -s . -p "test_*.py" -v'
             }
         }
+    }
 
     post {
         success {
