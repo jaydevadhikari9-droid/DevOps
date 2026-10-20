@@ -1,46 +1,69 @@
 
 pipeline {
-    agent { label 'python-runner' }
+    agent {
+        label 'python-runner'
+    }
+
+    options {
+        skipDefaultCheckout(true)
+    }
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo 'Repository checked out successfully.'
+            }
+        }
+
         stage('Build') {
             steps {
-                echo 'Checking Python availability...'
-                sh 'python --version'
-                sh 'python -m venv .venv-ci'
-                sh '.venv-ci/bin/python -m pip install -r requirements.txt'
+                dir('09-jenkins-multistage-pipeline') {
+                    echo 'Checking Python availability...'
+                    sh 'python --version'
+                    sh 'python -m venv .venv-ci'
+                    sh '.venv-ci/bin/python -m pip install -r requirements.txt'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running unit tests...'
-                sh '.venv-ci/bin/python -m unittest discover -s . -p "test_*.py" -v'
+                dir('09-jenkins-multistage-pipeline') {
+                    echo 'Running unit tests...'
+                    sh '.venv-ci/bin/python -m unittest discover -s . -p "test_*.py" -v'
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Preparing deployment directory...'
-                sh 'mkdir -p python-app-deploy'
-                sh 'cp app.py requirements.txt python-app-deploy/'
+                dir('09-jenkins-multistage-pipeline') {
+                    echo 'Preparing deployment directory...'
+                    sh 'mkdir -p python-app-deploy'
+                    sh 'cp app.py requirements.txt python-app-deploy/'
+                    sh 'test -f python-app-deploy/app.py'
+                    sh 'test -f python-app-deploy/requirements.txt'
+                }
             }
         }
 
         stage('Test Application') {
             steps {
-                echo 'Checking application response with Flask test client...'
-                sh '.venv-ci/bin/python -m unittest discover -s . -p "test_*.py" -v'
+                dir('09-jenkins-multistage-pipeline') {
+                    echo 'Verifying Flask application...'
+                    sh '.venv-ci/bin/python -m unittest discover -s . -p "test_*.py" -v'
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Exercise 9 pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Check the console logs.'
+            echo 'Pipeline failed. Check the stage logs.'
         }
         always {
             echo 'Pipeline execution finished.'
