@@ -1,36 +1,36 @@
+
 pipeline {
-    agent any
+    agent { label 'python-runner' }
 
     stages {
         stage('Build') {
             steps {
                 echo 'Checking Python availability...'
-                bat 'python --version'
-                bat 'python -m pip install -r requirements.txt'
+                sh 'python --version'
+                sh 'python -m venv .venv-ci'
+                sh '.venv-ci/bin/python -m pip install -r requirements.txt'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running unit tests...'
-                bat 'python -m unittest discover -s . -p "test_*.py" -v'
+                sh '.venv-ci/bin/python -m unittest discover -s . -p "test_*.py" -v'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo 'Preparing deployment directory...'
-                bat '''
-                    if not exist python-app-deploy mkdir python-app-deploy
-                    copy /Y app.py python-app-deploy\\app.py
-                    copy /Y requirements.txt python-app-deploy\\requirements.txt
-                '''
+                sh 'mkdir -p python-app-deploy'
+                sh 'cp app.py requirements.txt python-app-deploy/'
             }
         }
+
         stage('Test Application') {
             steps {
                 echo 'Checking application response with Flask test client...'
-                bat 'python -m unittest discover -s . -p "test_*.py" -v'
+                sh '.venv-ci/bin/python -m unittest discover -s . -p "test_*.py" -v'
             }
         }
     }
